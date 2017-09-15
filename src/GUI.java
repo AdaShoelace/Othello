@@ -9,13 +9,10 @@ import java.awt.event.ActionListener;
 public class GUI extends JFrame{
     final static Dimension BOARDSIZE = new Dimension(800, 800);
     final static Dimension BUTTONSIZE = new Dimension((int)BOARDSIZE.getWidth()/8, (int)BOARDSIZE.getHeight()/8);
-    private JLabel lblDepth;
-    private JLabel lblCount;
-    private JLabel lblInfo;
-    private JLabel lblTimer;
 
-    private long start;
-    private Timer timer;
+    private JLabel aiStatus;
+    private JLabel humanPoints;
+    private JLabel aiPoints;
 
     private OthelloButton[][] buttonGrid;
 
@@ -23,18 +20,10 @@ public class GUI extends JFrame{
         super(name);
         setPreferredSize(new Dimension(1000,1000));
         setResizable(false);
-        JPanel outerPanel = new JPanel(new GridBagLayout());
+        //JPanel outerPanel = new JPanel(new GridBagLayout());
+        JPanel outerPanel = new JPanel(new BorderLayout());
         outerPanel.setBackground(Color.BLACK);
         outerPanel.setPreferredSize(new Dimension(1000, 1000));
-        lblCount = new JLabel();
-        lblCount.setText("Nodes checked: 0");
-        add(lblCount);
-        lblDepth = new JLabel();
-        add(lblDepth);
-        lblInfo = new JLabel();
-        add(lblInfo);
-        lblTimer = new JLabel();
-        add(lblTimer);
 
         buttonGrid = new OthelloButton[Utils.ROWS][Utils.COLS];
 
@@ -49,7 +38,20 @@ public class GUI extends JFrame{
                 panel.add(buttonGrid[i][j]);
             }
         }
-        outerPanel.add(panel);
+        JPanel statusPanel = new JPanel(new GridLayout(1,3));
+        aiStatus = new JLabel("AI status: ");
+        aiPoints = new JLabel("AI points: ");
+        humanPoints = new JLabel("Human points: ");
+        aiStatus.setForeground(Color.WHITE);
+        aiPoints.setForeground(Color.WHITE);
+        humanPoints.setForeground(Color.WHITE);
+        statusPanel.add(humanPoints, 0, 0);
+        statusPanel.add(aiPoints, 0, 1);
+        statusPanel.add(aiStatus,0, 2);
+        statusPanel.setBackground(Color.BLACK);
+        statusPanel.setPreferredSize(new Dimension(100,100));
+        outerPanel.add(panel, BorderLayout.CENTER);
+        outerPanel.add(statusPanel, BorderLayout.NORTH);
         add(outerPanel);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.pack();
