@@ -12,10 +12,17 @@ public class Engine {
         }
     }
 
-    public void placeChip(PlayerType type, Coordinate coord) {
-        if(type == PlayerType.HUMAN) {
-        } else {
+    private GameState state;
 
-        }
+    public Engine(GameState state) {
+        this.state = state;
+    }
+
+    public void placeChip(PlayerType type, Coordinate coord) {
+        state.setCell(type, coord);
+    }
+
+    public boolean hasValidMoves() {
+        return true;
     }
 }
