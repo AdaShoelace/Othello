@@ -12,14 +12,15 @@ public class Engine {
         }
     }
 
-    private GameState state;
-
-    public Engine(GameState state) {
-        this.state = state;
+    public Engine() {
     }
 
-    public void placeChip(PlayerType type, Coordinate coord) {
+    public void placeChip(PlayerType type, Coordinate coord, GameState state) {
         state.setCell(type, coord);
+    }
+
+    public GameState getValidMoves(GameState state) {
+       return null;
     }
 
     public boolean hasValidMoves() {
