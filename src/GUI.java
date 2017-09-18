@@ -86,7 +86,6 @@ public class GUI extends JFrame{
                 }
             }
         }
-        pack();
     }
 
 

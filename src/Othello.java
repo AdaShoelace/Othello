@@ -14,7 +14,6 @@ public class Othello {
 
     public Othello() {
         gameState = new GameState();
-        engine = new Engine();
         ai = new AI();
         if(JOptionPane.showConfirmDialog(null,
                 "Does the human player start?",
@@ -39,8 +38,10 @@ public class Othello {
         currentPlayer = currentPlayer == Utils.AI ? Utils.HUMAN : Utils.AI;
 
         if(currentPlayer == Utils.HUMAN) {
-            engine.placeChip(Utils.HUMAN, gui.getLastButtonPressed(), gameState);
+            Engine.placeChip(Utils.HUMAN, gui.getLastButtonPressed(), gameState);
         }
+        if(gui.getLastButtonPressed() != null)
+            System.out.println(Engine.isValidMove(gui.getLastButtonPressed(), gameState, Utils.HUMAN));
         gui.draw(gameState);
 
     }
