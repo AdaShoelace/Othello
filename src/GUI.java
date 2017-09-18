@@ -13,7 +13,6 @@ public class GUI extends JFrame{
     private JLabel aiStatus;
     private JLabel humanPoints;
     private JLabel aiPoints;
-    private GameState state;
     private Coordinate lastButtonPressed;
 
     private OthelloButton[][] buttonGrid;
@@ -22,31 +21,16 @@ public class GUI extends JFrame{
         super(name);
         setPreferredSize(new Dimension(1000,1000));
         setResizable(false);
-        //JPanel outerPanel = new JPanel(new GridBagLayout());
         JPanel outerPanel = new JPanel(new BorderLayout());
         outerPanel.setBackground(Color.BLACK);
         outerPanel.setPreferredSize(new Dimension(1000, 1000));
-
+        lastButtonPressed = null;
         buttonGrid = new OthelloButton[Utils.ROWS][Utils.COLS];
 
         JPanel panel = new JPanel(new GridLayout(Utils.ROWS, Utils.COLS));
         panel.setBackground(new Color(0x0066cc));
         panel.setSize(BOARDSIZE);
-        this.state = state;
-        for(int i = 0; i < Utils.ROWS; ++i){
-            for(int j = 0; j < Utils.COLS; ++j){
-                buttonGrid[i][j] = new OthelloButton(new Coordinate(i,j));
-                buttonGrid[i][j].setPreferredSize(BUTTONSIZE);
-                if(state.getGrid()[i][j] == Utils.AI) {
-                    buttonGrid[i][j].setIcon(Chip.getChipInstance(Engine.PlayerType.AI));
-                    buttonGrid[i][j].setDisabledIcon(Chip.getChipInstance(Engine.PlayerType.AI));
-                } else if(state.getGrid()[i][j] == Utils.HUMAN) {
-                    buttonGrid[i][j].setIcon(Chip.getChipInstance(Engine.PlayerType.HUMAN));
-                    buttonGrid[i][j].setDisabledIcon(Chip.getChipInstance(Engine.PlayerType.HUMAN));
-                }
-                panel.add(buttonGrid[i][j]);
-            }
-        }
+        populateButtonPanel(panel, state);
         JPanel statusPanel = new JPanel(new GridLayout(1,3));
         aiStatus = new JLabel("AI status: ");
         aiPoints = new JLabel("AI points: " + state.getAiScore());
@@ -66,6 +50,45 @@ public class GUI extends JFrame{
         this.pack();
         this.setVisible(true);
     }
+
+    void populateButtonPanel(JPanel panel, GameState state) {
+        for(int i = 0; i < Utils.ROWS; ++i){
+            for(int j = 0; j < Utils.COLS; ++j){
+                buttonGrid[i][j] = new OthelloButton(new Coordinate(i,j));
+                buttonGrid[i][j].setPreferredSize(BUTTONSIZE);
+                if(state.getGrid()[i][j] == Utils.AI) {
+                    buttonGrid[i][j].setIcon(Chip.getChipInstance(Utils.AI));
+                    buttonGrid[i][j].setDisabledIcon(Chip.getChipInstance(Utils.AI));
+                } else if(state.getGrid()[i][j] == Utils.HUMAN) {
+                    buttonGrid[i][j].setIcon(Chip.getChipInstance(Utils.HUMAN));
+                    buttonGrid[i][j].setDisabledIcon(Chip.getChipInstance(Utils.HUMAN));
+                }
+                panel.add(buttonGrid[i][j]);
+            }
+        }
+    }
+
+    Coordinate getLastButtonPressed() {
+        return lastButtonPressed;
+    }
+
+    void draw(GameState state) {
+        for(int i = 0; i < Utils.ROWS; i++) {
+            for(int j = 0; j < Utils.COLS; j++) {
+                if(state.getGrid()[i][j] == Utils.AI) {
+                    buttonGrid[i][j].setIcon(Chip.getChipInstance(Utils.AI));
+                    buttonGrid[i][j].setDisabledIcon(Chip.getChipInstance(Utils.AI));
+                    buttonGrid[i][j].setEnabled(false);
+                } else if(state.getGrid()[i][j] == Utils.HUMAN) {
+                    buttonGrid[i][j].setIcon(Chip.getChipInstance(Utils.HUMAN));
+                    buttonGrid[i][j].setDisabledIcon(Chip.getChipInstance(Utils.HUMAN));
+                    buttonGrid[i][j].setEnabled(false);
+                }
+            }
+        }
+        pack();
+    }
+
 
     private class OthelloButton extends JButton {
         private Coordinate coord;
@@ -88,9 +111,7 @@ public class GUI extends JFrame{
             OthelloButton button = (OthelloButton)actionEvent.getSource();
             int row = button.getCoordinate().getRow();
             int col = button.getCoordinate().getCol();
-            //buttonGrid[row][col].setIcon(Chip.getChipInstance(Engine.PlayerType.HUMAN));
-            //buttonGrid[row][col].setEnabled(false);
-            lastButtonPressed = button.getCoordinate();
+            GUI.this.lastButtonPressed = new Coordinate(row, col);
             button.setEnabled(false);
             System.out.println("clicked");
         }

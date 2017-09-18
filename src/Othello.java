@@ -10,7 +10,7 @@ public class Othello {
     GUI gui;
     Engine engine;
     AI ai;
-    Engine.PlayerType currentPlayer;
+    private int currentPlayer;
 
     public Othello() {
         gameState = new GameState();
@@ -20,23 +20,28 @@ public class Othello {
                 "Does the human player start?",
                 "Choose starting player",
                 JOptionPane.YES_NO_OPTION) == 0) {
-            currentPlayer = Engine.PlayerType.HUMAN;
+            currentPlayer = Utils.HUMAN;
         } else {
-            currentPlayer = Engine.PlayerType.AI;
+            currentPlayer = Utils.AI;
         }
         isRunning = true;
-        System.out.println(currentPlayer.toString());
+        System.out.println(currentPlayer);
     }
 
     public void run() {
         gui = new GUI("Othello", gameState);
         while(isRunning) {
-
+            update();
         }
     }
 
     public void update() {
-        currentPlayer = currentPlayer == Engine.PlayerType.AI ? Engine.PlayerType.HUMAN : Engine.PlayerType.AI;
+        currentPlayer = currentPlayer == Utils.AI ? Utils.HUMAN : Utils.AI;
+
+        if(currentPlayer == Utils.HUMAN) {
+            engine.placeChip(Utils.HUMAN, gui.getLastButtonPressed(), gameState);
+        }
+        gui.draw(gameState);
 
     }
 

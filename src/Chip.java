@@ -12,15 +12,13 @@ public final class Chip extends ImageIcon {
     private static final Color HUMAN_COLOR = Color.WHITE;
     private static final Color AI_COLOR = Color.BLACK;
 
-    private Chip() {
+    private Chip(){}
 
-    }
-
-    public static ImageIcon getChipInstance(Engine.PlayerType type) {
+    public static ImageIcon getChipInstance(int type) {
         BufferedImage circleImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = circleImage.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(type == Engine.PlayerType.HUMAN ? HUMAN_COLOR : AI_COLOR);
+        g2.setColor(type == Utils.HUMAN ? HUMAN_COLOR : AI_COLOR);
         int x = GAP;
         int y = x;
         int width = IMG_WIDTH -2 * x;
