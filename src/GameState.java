@@ -11,15 +11,28 @@ public class GameState {
         gameGrid = createGrid();
     }
 
+    /**
+     * Copy constructor
+     * @param state
+     */
     public GameState(GameState state) {
         gameGrid = state.gameGrid;
     }
 
+    /**
+     * Sets the given cell in the board
+     * @param player
+     * @param coord
+     */
     public void setCell(int player, Coordinate coord) {
         gameGrid[coord.getRow()][coord.getCol()] = player == Utils.HUMAN ? Utils.HUMAN
                 : Utils.AI;
     }
 
+    /**
+     * Creates the initial game state with the four chips in the middle
+     * @return
+     */
     private int[][] createGrid() {
         int[][] ret = new int[Utils.ROWS][Utils.COLS];
         for(int r = 0; r < Utils.ROWS; ++r) {
@@ -38,11 +51,4 @@ public class GameState {
         return gameGrid;
     }
 
-    public int getPlayerScore() {
-        return playerScore;
-    }
-
-    public int getAiScore() {
-        return aiScore;
-    }
 }

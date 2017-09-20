@@ -8,7 +8,8 @@ import java.awt.event.ActionListener;
  */
 public class GUI extends JFrame{
     final static Dimension BOARDSIZE = new Dimension(800, 800);
-    final static Dimension BUTTONSIZE = new Dimension((int)BOARDSIZE.getWidth()/8, (int)BOARDSIZE.getHeight()/8);
+    final static Dimension BUTTONSIZE = new Dimension((int)BOARDSIZE.getWidth()/Utils.ROWS,
+            (int)BOARDSIZE.getHeight()/Utils.COLS);
 
     private JLabel aiStatus;
     private JLabel humanPoints;
@@ -33,8 +34,8 @@ public class GUI extends JFrame{
         populateButtonPanel(panel, state);
         JPanel statusPanel = new JPanel(new GridLayout(1,3));
         aiStatus = new JLabel("AI status: ");
-        aiPoints = new JLabel("AI points: " + state.getAiScore());
-        humanPoints = new JLabel("Human points: " + state.getPlayerScore());
+        aiPoints = new JLabel("AI points: ");
+        humanPoints = new JLabel("Human points: ");
         aiStatus.setForeground(Color.WHITE);
         aiPoints.setForeground(Color.WHITE);
         humanPoints.setForeground(Color.WHITE);
@@ -51,7 +52,7 @@ public class GUI extends JFrame{
         this.setVisible(true);
     }
 
-    void populateButtonPanel(JPanel panel, GameState state) {
+    private void populateButtonPanel(JPanel panel, GameState state) {
         for(int i = 0; i < Utils.ROWS; ++i){
             for(int j = 0; j < Utils.COLS; ++j){
                 buttonGrid[i][j] = new OthelloButton(new Coordinate(i,j));
@@ -68,6 +69,10 @@ public class GUI extends JFrame{
         }
     }
 
+    /**
+     * Draws the board based on the given state
+     * @param state
+     */
     void draw(GameState state) {
         for(int i = 0; i < Utils.ROWS; i++) {
             for(int j = 0; j < Utils.COLS; j++) {
@@ -100,6 +105,9 @@ public class GUI extends JFrame{
         }
     }
 
+    /**
+     * Class to represent the buttons
+     */
     private class OthelloButton extends JButton {
         private Coordinate coord;
         protected OthelloButton(Coordinate coord){
@@ -119,8 +127,6 @@ public class GUI extends JFrame{
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             OthelloButton button = (OthelloButton)actionEvent.getSource();
-            //int row = button.getCoordinate().getRow();
-            //int col = button.getCoordinate().getCol();
             othello.buttonPressed(button.getCoordinate());
             System.out.println("clicked");
         }

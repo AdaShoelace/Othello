@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
+ * Factory class with the purpose of making ImageIcons that in turn is used as the graphical
+ * representation of the chips/game pieces
  * Created by Pierre Lejdbring on 9/13/17.
  */
 public final class Chip extends ImageIcon {

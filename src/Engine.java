@@ -12,11 +12,14 @@ public class Engine {
     private Engine() {
     }
 
-    public static void placeChip(int type, Coordinate coord, GameState state) {
-        if(coord == null) return;
-        state.setCell(type, coord);
-    }
-
+    /**
+     * Updates the board by setting the coordinates between the latest chip added to the board
+     * and the ones that were already there
+     * @param state
+     * @param coord
+     * @param player
+     * @return
+     */
     public static GameState updateBoard(GameState state, Coordinate coord, int player) {
         if(isValidMove(coord, state, player)) {
             GameState postMove = new GameState(state);
@@ -36,6 +39,13 @@ public class Engine {
         return state;
     }
 
+    /**
+     * Checks if the move the players wants to make is valid or not
+     * @param coord
+     * @param state
+     * @param player
+     * @return
+     */
     public static boolean isValidMove(Coordinate coord, GameState state, int player) {
         return checkDirection(NO_DIRECTION, WEST, coord, state, player)
                 || checkDirection(NO_DIRECTION, EAST, coord, state, player)
@@ -98,6 +108,13 @@ public class Engine {
         }
         return state;
     }
+
+    /**
+     * Calculate the valid moves for the given player in the given state
+     * @param state
+     * @param player
+     * @return a boolean matrix of valid coordinates
+     */
     public static boolean[][] getValidMoves(GameState state, int player) {
         boolean[][] validMoves = new boolean[state.getGrid().length][state.getGrid()[0].length];
         for(int row = 0; row < state.getGrid().length; row++) {
@@ -107,6 +124,13 @@ public class Engine {
         }
         return validMoves;
     }
+
+    /**
+     * Checks if the given player has any valid moves to make in the given state
+     * @param state
+     * @param player
+     * @return
+     */
     public static boolean hasValidMoves(GameState state, int player) {
         for(int row = 0; row < state.getGrid().length; row++) {
             for(int col = 0; col < state.getGrid()[0].length; col++) {
@@ -118,6 +142,12 @@ public class Engine {
         return false;
     }
 
+    /**
+     * Calculates the number of valid moves for the given player in the given state
+     * @param state
+     * @param player
+     * @return
+     */
     public static int validMoveCount(GameState state, int player) {
         boolean[][] board = getValidMoves(state, player);
         int count = 0;
@@ -127,6 +157,37 @@ public class Engine {
             }
         }
         return count;
+    }
+
+    /**
+     * Checks wether the given state is a final state or not
+     * @param state
+     * @return
+     */
+    public static boolean gameOver(GameState state) {
+        if(hasValidMoves(state, Utils.AI) || hasValidMoves(state, Utils.HUMAN))
+            return false;
+        else
+            return true;
+    }
+
+    /**
+     * Calculates the score for the given state.
+     * Positive - human player is in the lead
+     * Negative - AI is in the lead
+     * Zero - it's a tie
+     * @param state
+     * @return
+     */
+    public static int calculateScore(GameState state) {
+        int score = 0;
+
+        for(int[] row : state.getGrid()) {
+            for(int elem : row) {
+                score += elem;
+            }
+        }
+        return score;
     }
 
 }

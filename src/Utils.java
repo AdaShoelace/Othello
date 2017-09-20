@@ -13,6 +13,10 @@ public class Utils {
 
     }
 
+    /**
+     * Helper function to print the given matrix to the console
+     * @param b - boolean matrix containing possible moves
+     */
     public static void print(boolean[][] b) {
         for(boolean[] row : b) {
             for(boolean elem: row) {

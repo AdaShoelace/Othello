@@ -1,4 +1,5 @@
 /**
+ * This class serves as a representation of a coordinate on the game board
  * Created by Pierre Lejdbring on 9/13/17.
  */
 public class Coordinate implements Comparable<Coordinate>{
