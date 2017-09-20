@@ -13,18 +13,18 @@ public class GUI extends JFrame{
     private JLabel aiStatus;
     private JLabel humanPoints;
     private JLabel aiPoints;
-    private Coordinate lastButtonPressed;
+    private Othello othello;
 
     private OthelloButton[][] buttonGrid;
 
-    public GUI(String name, GameState state){
+    public GUI(String name, GameState state, Othello othello){
         super(name);
         setPreferredSize(new Dimension(1000,1000));
         setResizable(false);
         JPanel outerPanel = new JPanel(new BorderLayout());
         outerPanel.setBackground(Color.BLACK);
         outerPanel.setPreferredSize(new Dimension(1000, 1000));
-        lastButtonPressed = null;
+        this.othello = othello;
         buttonGrid = new OthelloButton[Utils.ROWS][Utils.COLS];
 
         JPanel panel = new JPanel(new GridLayout(Utils.ROWS, Utils.COLS));
@@ -68,10 +68,6 @@ public class GUI extends JFrame{
         }
     }
 
-    Coordinate getLastButtonPressed() {
-        return lastButtonPressed;
-    }
-
     void draw(GameState state) {
         for(int i = 0; i < Utils.ROWS; i++) {
             for(int j = 0; j < Utils.COLS; j++) {
@@ -88,6 +84,21 @@ public class GUI extends JFrame{
         }
     }
 
+    public void disableButtons() {
+        for(OthelloButton[] b : buttonGrid) {
+            for(OthelloButton ob : b) {
+                ob.setEnabled(false);
+            }
+        }
+    }
+
+    public void enableButtons() {
+         for(OthelloButton[] b : buttonGrid) {
+            for(OthelloButton ob : b) {
+                ob.setEnabled(true);
+            }
+        }
+    }
 
     private class OthelloButton extends JButton {
         private Coordinate coord;
@@ -108,10 +119,9 @@ public class GUI extends JFrame{
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             OthelloButton button = (OthelloButton)actionEvent.getSource();
-            int row = button.getCoordinate().getRow();
-            int col = button.getCoordinate().getCol();
-            GUI.this.lastButtonPressed = new Coordinate(row, col);
-            button.setEnabled(false);
+            //int row = button.getCoordinate().getRow();
+            //int col = button.getCoordinate().getCol();
+            othello.buttonPressed(button.getCoordinate());
             System.out.println("clicked");
         }
     }

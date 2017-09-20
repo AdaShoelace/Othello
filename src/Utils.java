@@ -12,4 +12,13 @@ public class Utils {
     private Utils() {
 
     }
+
+    public static void print(boolean[][] b) {
+        for(boolean[] row : b) {
+            for(boolean elem: row) {
+                System.out.print(elem ? 1 + ", " : 0 + ", ");
+            }
+            System.out.println();
+        }
+    }
 }

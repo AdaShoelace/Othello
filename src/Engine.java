@@ -17,6 +17,25 @@ public class Engine {
         state.setCell(type, coord);
     }
 
+    public static GameState updateBoard(GameState state, Coordinate coord, int player) {
+        if(isValidMove(coord, state, player)) {
+            GameState postMove = new GameState(state);
+            postMove.setCell(player, coord);
+
+            postMove = flipChips(NO_DIRECTION, WEST, coord, state, player);
+            postMove = flipChips(NO_DIRECTION, EAST, coord, state, player);
+            postMove = flipChips(WEST, NO_DIRECTION, coord, state, player);
+            postMove = flipChips(EAST, NO_DIRECTION, coord, state, player);
+            postMove = flipChips(NORTH, WEST, coord, state, player);
+            postMove = flipChips(NORTH, EAST, coord, state, player);
+            postMove = flipChips(SOUTH, WEST, coord, state, player);
+            postMove = flipChips(SOUTH, EAST, coord, state, player);
+
+            return postMove;
+        }
+        return state;
+    }
+
     public static boolean isValidMove(Coordinate coord, GameState state, int player) {
         return checkDirection(NO_DIRECTION, WEST, coord, state, player)
                 || checkDirection(NO_DIRECTION, EAST, coord, state, player)
@@ -55,6 +74,59 @@ public class Engine {
             col += deltaCol;
         }
         return false;
+    }
+
+    private static GameState flipChips(int deltaRow, int deltaCol, Coordinate coord, GameState state, int player) {
+        int row = coord.getRow() + deltaRow;
+        int col = coord.getCol() + deltaCol;
+        int[][] grid = state.getGrid();
+
+        while(row >= 0 && row < grid.length && col >= 0 && col < grid[0].length) {
+            if(grid[row][col] == Utils.NONE) {
+                break;
+            } else if(grid[row][col] == player) {
+                while(row != coord.getRow() || col != coord.getCol()) {
+                    state.setCell(player, new Coordinate(row, col));
+
+                    row -= deltaRow;
+                    col -= deltaCol;
+                }
+                break;
+            }
+            row += deltaRow;
+            col += deltaCol;
+        }
+        return state;
+    }
+    public static boolean[][] getValidMoves(GameState state, int player) {
+        boolean[][] validMoves = new boolean[state.getGrid().length][state.getGrid()[0].length];
+        for(int row = 0; row < state.getGrid().length; row++) {
+            for(int col = 0; col < state.getGrid()[0].length; col++) {
+                validMoves[row][col] = isValidMove(new Coordinate(row, col), state, player);
+            }
+        }
+        return validMoves;
+    }
+    public static boolean hasValidMoves(GameState state, int player) {
+        for(int row = 0; row < state.getGrid().length; row++) {
+            for(int col = 0; col < state.getGrid()[0].length; col++) {
+                if(isValidMove(new Coordinate(row, col), state, player)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static int validMoveCount(GameState state, int player) {
+        boolean[][] board = getValidMoves(state, player);
+        int count = 0;
+        for(boolean[] row : board) {
+            for(boolean elem : row) {
+                count += elem ? 1 : 0;
+            }
+        }
+        return count;
     }
 
 }

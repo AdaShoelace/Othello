@@ -15,8 +15,8 @@ public class GameState {
         gameGrid = state.gameGrid;
     }
 
-    public void setCell(int type, Coordinate coord) {
-        gameGrid[coord.getRow()][coord.getCol()] = type == Utils.HUMAN ? Utils.HUMAN
+    public void setCell(int player, Coordinate coord) {
+        gameGrid[coord.getRow()][coord.getCol()] = player == Utils.HUMAN ? Utils.HUMAN
                 : Utils.AI;
     }
 

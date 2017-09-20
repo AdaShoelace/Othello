@@ -8,7 +8,6 @@ public class Othello {
     private boolean isRunning;
     GameState gameState;
     GUI gui;
-    Engine engine;
     AI ai;
     private int currentPlayer;
 
@@ -24,31 +23,39 @@ public class Othello {
             currentPlayer = Utils.AI;
         }
         isRunning = true;
+        gui = new GUI("Othello", gameState, this);
         System.out.println(currentPlayer);
     }
 
-    public void run() {
-        gui = new GUI("Othello", gameState);
-        while(isRunning) {
-            update();
+
+    public void buttonPressed(Coordinate coord) {
+
+        Utils.print(Engine.getValidMoves(gameState, currentPlayer));
+        System.out.println("Valid move count: " + Engine.validMoveCount(gameState, currentPlayer));
+
+        if(Engine.isValidMove(coord, gameState, currentPlayer)) {
+            gameState = Engine.updateBoard(gameState, coord, currentPlayer);
+            SwingUtilities.invokeLater(() -> {
+                gui.draw(gameState);
+                gui.disableButtons();
+            });
+            currentPlayer = Utils.AI;
         }
-    }
 
-    public void update() {
-        currentPlayer = currentPlayer == Utils.AI ? Utils.HUMAN : Utils.AI;
-
-        if(currentPlayer == Utils.HUMAN) {
-            Engine.placeChip(Utils.HUMAN, gui.getLastButtonPressed(), gameState);
+        while(Engine.hasValidMoves(gameState, Utils.AI) /*&& !Engine.hasValidMoves(gameState, Utils.HUMAN)*/) {
+            currentPlayer = Utils.HUMAN;
+            SwingUtilities.invokeLater(() -> {
+                gui.draw(gameState);
+                gui.enableButtons();
+            });
+            //This break is here only for debugging purposes
+            break;
         }
-        if(gui.getLastButtonPressed() != null)
-            System.out.println(Engine.isValidMove(gui.getLastButtonPressed(), gameState, Utils.HUMAN));
-        gui.draw(gameState);
-
     }
 
 
     public static void main(String[] args) {
-        new Othello().run();
+        new Othello();
 
     }
 
