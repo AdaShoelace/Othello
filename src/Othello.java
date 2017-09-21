@@ -30,7 +30,7 @@ public class Othello {
         //System.out.println(currentPlayer > 0 ? "HUMAN" : "AI");
         //Utils.print(Engine.getValidMoves(gameState, currentPlayer));
         //System.out.println("Valid move count: " + Engine.validMoveCount(gameState, currentPlayer));
-        System.out.println(Engine.calculateScore(gameState));
+        //System.out.println(Engine.calculateScore(gameState));
 
         if(Engine.isValidMove(coord, gameState, currentPlayer)) {
             gameState = Engine.updateBoard(gameState, coord, currentPlayer);
@@ -42,12 +42,14 @@ public class Othello {
         } else {
             return;
         }
+        ai.aiMakeMove(gameState);
+        ai.printChildren(ai.n);
 
         //Debuggin
-        System.out.println(currentPlayer > 0 ? "HUMAN" : "AI");
+        //System.out.println(currentPlayer > 0 ? "HUMAN" : "AI");
         //System.out.println(Engine.calculateScore(gameState));
-        Utils.print(Engine.getValidMoves(gameState, currentPlayer));
-        System.out.println();
+        //Utils.print(Engine.getValidMoves(gameState, currentPlayer));
+        //System.out.println();
         //------------------------------------------------------------
 
         while(Engine.hasValidMoves(gameState, Utils.AI) /*&& !Engine.hasValidMoves(gameState, Utils.HUMAN)*/) {
@@ -60,10 +62,10 @@ public class Othello {
             break;
         }
         //debugging
-        System.out.println("Current state");
+        /*System.out.println("Current state");
         Utils.printState(gameState);
         System.out.println("Possible moves");
-        Utils.print(Engine.getValidMoves(gameState, currentPlayer));
+        Utils.print(Engine.getValidMoves(gameState, currentPlayer));*/
         //---------------------------------------------------
         currentPlayer = Utils.HUMAN;
     }
