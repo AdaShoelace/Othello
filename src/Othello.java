@@ -27,9 +27,9 @@ public class Othello {
      * @param coord
      */
     public void buttonPressed(Coordinate coord) {
-
-        Utils.print(Engine.getValidMoves(gameState, currentPlayer));
-        System.out.println("Valid move count: " + Engine.validMoveCount(gameState, currentPlayer));
+        //System.out.println(currentPlayer > 0 ? "HUMAN" : "AI");
+        //Utils.print(Engine.getValidMoves(gameState, currentPlayer));
+        //System.out.println("Valid move count: " + Engine.validMoveCount(gameState, currentPlayer));
         System.out.println(Engine.calculateScore(gameState));
 
         if(Engine.isValidMove(coord, gameState, currentPlayer)) {
@@ -39,11 +39,19 @@ public class Othello {
                 gui.disableButtons();
             });
             currentPlayer = Utils.AI;
+        } else {
+            return;
         }
-        System.out.println(Engine.calculateScore(gameState));
+
+        //Debuggin
+        System.out.println(currentPlayer > 0 ? "HUMAN" : "AI");
+        //System.out.println(Engine.calculateScore(gameState));
+        Utils.print(Engine.getValidMoves(gameState, currentPlayer));
+        System.out.println();
+        //------------------------------------------------------------
 
         while(Engine.hasValidMoves(gameState, Utils.AI) /*&& !Engine.hasValidMoves(gameState, Utils.HUMAN)*/) {
-            currentPlayer = Utils.HUMAN;
+            //ai make move
             SwingUtilities.invokeLater(() -> {
                 gui.draw(gameState);
                 gui.enableButtons();
@@ -51,6 +59,13 @@ public class Othello {
             //This break is here only for debugging purposes
             break;
         }
+        //debugging
+        System.out.println("Current state");
+        Utils.printState(gameState);
+        System.out.println("Possible moves");
+        Utils.print(Engine.getValidMoves(gameState, currentPlayer));
+        //---------------------------------------------------
+        currentPlayer = Utils.HUMAN;
     }
 
     public static void main(String[] args) {

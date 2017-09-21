@@ -21,18 +21,18 @@ public class Engine {
      * @return
      */
     public static GameState updateBoard(GameState state, Coordinate coord, int player) {
-        if(isValidMove(coord, state, player)) {
+        if(isValidMove(coord, state, player) && state.getGrid()[coord.getRow()][coord.getCol()] == Utils.NONE) {
             GameState postMove = new GameState(state);
             postMove.setCell(player, coord);
 
-            postMove = flipChips(NO_DIRECTION, WEST, coord, state, player);
-            postMove = flipChips(NO_DIRECTION, EAST, coord, state, player);
-            postMove = flipChips(WEST, NO_DIRECTION, coord, state, player);
-            postMove = flipChips(EAST, NO_DIRECTION, coord, state, player);
-            postMove = flipChips(NORTH, WEST, coord, state, player);
-            postMove = flipChips(NORTH, EAST, coord, state, player);
-            postMove = flipChips(SOUTH, WEST, coord, state, player);
-            postMove = flipChips(SOUTH, EAST, coord, state, player);
+            postMove = flipChips(NO_DIRECTION, WEST, coord, postMove, player);
+            postMove = flipChips(NO_DIRECTION, EAST, coord, postMove, player);
+            postMove = flipChips(WEST, NO_DIRECTION, coord, postMove, player);
+            postMove = flipChips(EAST, NO_DIRECTION, coord, postMove, player);
+            postMove = flipChips(NORTH, WEST, coord, postMove, player);
+            postMove = flipChips(NORTH, EAST, coord, postMove, player);
+            postMove = flipChips(SOUTH, WEST, coord, postMove, player);
+            postMove = flipChips(SOUTH, EAST, coord, postMove, player);
 
             return postMove;
         }
@@ -77,7 +77,7 @@ public class Engine {
         while(row < Utils.ROWS && row >= 0 && col < Utils.COLS && col >= 0) {
             if(grid[row][col] == Utils.NONE) {
                 return false;
-            } else if(grid[row][col] == Utils.HUMAN) {
+            } else if(grid[row][col] == player) {
                 return true;
             }
             row += deltaRow;
@@ -119,7 +119,8 @@ public class Engine {
         boolean[][] validMoves = new boolean[state.getGrid().length][state.getGrid()[0].length];
         for(int row = 0; row < state.getGrid().length; row++) {
             for(int col = 0; col < state.getGrid()[0].length; col++) {
-                validMoves[row][col] = isValidMove(new Coordinate(row, col), state, player);
+                validMoves[row][col] = state.getGrid()[row][col] == Utils.NONE &&
+                        isValidMove(new Coordinate(row, col), state, player);
             }
         }
         return validMoves;

@@ -128,7 +128,6 @@ public class GUI extends JFrame{
         public void actionPerformed(ActionEvent actionEvent) {
             OthelloButton button = (OthelloButton)actionEvent.getSource();
             othello.buttonPressed(button.getCoordinate());
-            System.out.println("clicked");
         }
     }
 }
