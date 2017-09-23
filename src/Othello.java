@@ -75,9 +75,10 @@ public class Othello {
                     gameState = Engine.getFirstPossibleState(gameState, currentPlayer);
                     Utils.printState(gameState);
             } else if(ALL_POSSIBLE_STATES_LIST) {
-                for(Coordinate c : Engine.altGetValidMoves(gameState, currentPlayer)) {
+                GameState tempState = new GameState();
+                for(Coordinate c : Engine.altGetValidMoves(tempState, currentPlayer)) {
                     System.out.println("Row: " + c.getRow() + "\nCol: " + c.getCol());
-                    Utils.printState(Engine.updateBoard(gameState,c,currentPlayer));
+                    Utils.printState(Engine.updateBoard(tempState,c,currentPlayer));
                     System.out.println();
                 }
             }
