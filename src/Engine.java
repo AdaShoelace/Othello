@@ -51,11 +51,17 @@ public class Engine {
         boolean[][] possibleMoves = getValidMoves(state, player);
         ArrayList<GameState> possibleStates = new ArrayList<>();
 
+        int i = 0;
+
         for(int row = 0; row < possibleMoves.length; row++) {
             for(int col = 0; col < possibleMoves[0].length; col++) {
                 if(possibleMoves[row][col]) {
                     GameState gsCpy = new GameState(state);
+                    System.out.println("Generating states iteration: " + i);
+                    Utils.printState(Engine.updateBoard(gsCpy, new Coordinate(row, col), player));
+                    System.out.println();
                     possibleStates.add(Engine.updateBoard(gsCpy, new Coordinate(row, col), player));
+                    i++;
                 }
             }
         }

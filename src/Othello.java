@@ -59,7 +59,7 @@ public class Othello {
             Utils.print(Engine.getValidMoves(gameState, currentPlayer));
 
             if(ALL_POSSIBLE_STATES) {
-                ArrayList<GameState> asd = Engine.generatePossibleStates2(gameState, currentPlayer);
+                ArrayList<GameState> asd = Engine.generatePossibleStates(gameState, currentPlayer);
                 int i = 1;
                 for(GameState gs : asd) {
                     System.out.println("Possible state: " + i);

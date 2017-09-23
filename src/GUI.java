@@ -127,8 +127,8 @@ public class GUI extends JFrame{
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             OthelloButton button = (OthelloButton)actionEvent.getSource();
-            //othello.buttonPressed(button.getCoordinate());
-            othello.localMultiplayerButtonPressed(button.getCoordinate());
+            othello.buttonPressed(button.getCoordinate());
+            //othello.localMultiplayerButtonPressed(button.getCoordinate());
         }
     }
 }
