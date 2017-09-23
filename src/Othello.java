@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.util.ArrayList;
 
 /**
  * This class acts as a controller, tying the whole game together
@@ -31,6 +32,23 @@ public class Othello {
         //Utils.print(Engine.getValidMoves(gameState, currentPlayer));
         //System.out.println("Valid move count: " + Engine.validMoveCount(gameState, currentPlayer));
         //System.out.println(Engine.calculateScore(gameState));
+
+
+        if(true) {
+            System.out.println("Initial state");
+            Utils.printState(gameState);
+            System.out.println("Possible moves");
+            Utils.print(Engine.getValidMoves(gameState, currentPlayer));
+            /*ArrayList<GameState> asd = Engine.generatePossibleStates(gameState, currentPlayer);
+            int i = 1;
+            for(GameState gs : asd) {
+                System.out.println("Possible state: " + i);
+                Utils.printState(gs);
+                i++;
+            }*/
+            Utils.printState(Engine.getFirstPossibleState(gameState, currentPlayer));
+            return;
+        }
 
         if(Engine.isValidMove(coord, gameState, currentPlayer)) {
             gameState = Engine.updateBoard(gameState, coord, currentPlayer);

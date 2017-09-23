@@ -4,8 +4,6 @@
 public class GameState {
 
     private int gameGrid[][];
-    private int playerScore = 0;
-    private int aiScore = 0;
 
     public GameState() {
         gameGrid = createGrid();

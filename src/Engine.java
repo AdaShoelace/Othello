@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Created by Pierre Lejdbring on 9/11/17.
  */
@@ -37,6 +39,39 @@ public class Engine {
             return postMove;
         }
         return state;
+    }
+
+    /**
+     * Generates a list of all the possible states the game can take based on the state passed to the method
+     * @param state
+     * @param player
+     * @return list of possible states
+     */
+    public static ArrayList<GameState> generatePossibleStates(GameState state, int player) {
+        boolean[][] possibleMoves = getValidMoves(state, player);
+        ArrayList<GameState> possibleStates = new ArrayList<>();
+
+        for(int row = 0; row < possibleMoves.length; row++) {
+            for(int col = 0; col < possibleMoves[0].length; col++) {
+                if(possibleMoves[row][col]) {
+                    possibleStates.add(Engine.updateBoard(new GameState(state), new Coordinate(row, col), player));
+                }
+            }
+        }
+        return possibleStates;
+    }
+
+    public static GameState getFirstPossibleState(GameState state, int player) {
+        boolean[][] moves = getValidMoves(state, player);
+        GameState ret = state;
+        for(int row = 0; row < moves.length; row++) {
+            for(int col = 0; col < moves[0].length; col++) {
+                if(moves[row][col]) {
+                    return Engine.updateBoard(new GameState(state), new Coordinate(row, col), player);
+                }
+            }
+        }
+        return ret;
     }
 
     /**
