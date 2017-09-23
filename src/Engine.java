@@ -23,8 +23,8 @@ public class Engine {
      * @return
      */
     public static GameState updateBoard(GameState state, Coordinate coord, int player) {
+        GameState postMove = new GameState(state);
         if(isValidMove(coord, state, player) && state.getGrid()[coord.getRow()][coord.getCol()] == Utils.NONE) {
-            GameState postMove = new GameState(state);
             postMove.setCell(player, coord);
 
             postMove = flipChips(NO_DIRECTION, WEST, coord, postMove, player);
@@ -38,7 +38,7 @@ public class Engine {
 
             return postMove;
         }
-        return state;
+        return postMove;
     }
 
     /**
@@ -166,6 +166,20 @@ public class Engine {
             col += deltaCol;
         }
         return state;
+    }
+
+    public static ArrayList<Coordinate> altGetValidMoves(GameState gState, int player) {
+        GameState state = new GameState(gState);
+        ArrayList<Coordinate> validMoves = new ArrayList<>();
+        for(int row = 0; row < state.getGrid().length; row++) {
+            for(int col = 0; col < state.getGrid()[0].length; col++) {
+                Coordinate move = new Coordinate(row, col);
+                if(isValidMove(move, state,player)) {
+                    validMoves.add(move);
+                }
+            }
+        }
+        return validMoves;
     }
 
     /**

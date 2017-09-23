@@ -9,7 +9,8 @@ public class Othello {
 
     //DEBUG
     private final boolean DEBUG = true;
-    private final boolean ALL_POSSIBLE_STATES = true;
+    private final boolean ALL_POSSIBLE_STATES = false;
+    private final boolean ALL_POSSIBLE_STATES_LIST = true;
     private final boolean FIRST_POSSIBLE_STATE = false;
 
     private boolean isRunning;
@@ -73,6 +74,12 @@ public class Othello {
                     System.out.println("Next possible state");
                     gameState = Engine.getFirstPossibleState(gameState, currentPlayer);
                     Utils.printState(gameState);
+            } else if(ALL_POSSIBLE_STATES_LIST) {
+                for(Coordinate c : Engine.altGetValidMoves(gameState, currentPlayer)) {
+                    System.out.println("Row: " + c.getRow() + "\nCol: " + c.getCol());
+                    Utils.printState(Engine.updateBoard(gameState,c,currentPlayer));
+                    System.out.println();
+                }
             }
             return;
         }
