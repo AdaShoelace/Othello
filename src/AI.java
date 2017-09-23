@@ -1,62 +1,79 @@
 import java.util.ArrayList;
+import java.util.Timer;
 
 /**
  * Created by Pierre Lejdbring on 9/11/17.
  */
 public class AI {
+
+    private static int TIME_LIMIT = 5000;
     //private GameState state;
-    Node n;
+    Node root;
     public AI() {
 
     }
 
-    void aiMakeMove(GameState state) {
-        n = new Node(state);
-        n.addChildren(n);
+    Coordinate aiMakeMove(GameState state) {
+        root = new Node(state);
+        return root.bestAction.c;
     }
 
     private class Node {
-        int alpha = Integer.MAX_VALUE;
-        int beta = Integer.MIN_VALUE;
-        boolean isTerminal = false;
-        int player = Utils.HUMAN;
+        int alpha = Integer.MIN_VALUE;
+        int beta = Integer.MAX_VALUE;
         GameState state;
-        ArrayList<Node> children;
+        Action bestAction;
+        boolean isTerminal = false;
+        int player = Utils.AI;
         Node(GameState state) {
             this.state = state;
-            children = new ArrayList<>();
+            max();
         }
 
-        //TODO this function isn't working correclty.
-        //TODO it is supposed to add nodes containing new states each based on
-        //TODO each separate calid coordinate from the grid of possible moves of parent node
-        void addChildren(Node n) {
-            boolean[][] validMoves = Engine.getValidMoves(n.state,this.player);
-            System.out.println("Created from: ");
-            Utils.print(validMoves);
-            for(int i = 0; i < validMoves.length; i++) {
-                for(int j = 0; j < validMoves[0].length; j++) {
-                    if(validMoves[i][j]) {
-                        children.add(new Node(Engine.updateBoard(new GameState(n.state),
-                                new Coordinate(i,j), -player)));
-                    }
-                }
+        Node(GameState state, int player) {
+            this.state = state;
+            this.player = player;
+            if(this.player == Utils.HUMAN) {
+                min();
+            } else {
+                max();
             }
-
         }
-    }
 
-    void printChildren(Node n) {
-        int i = 1;
-        Utils.printState(n.state);
-        System.out.println();
-
-        for(Node p : n.children) {
-            System.out.println("Child: " + i + " ");
-            Utils.printState(p.state);
-            System.out.println();
-            i++;
+        private void max() {
+            ArrayList<Coordinate> validMoves = Engine.getValidMoves(this.state, this.player);
+            if(validMoves.size() == 0) this.isTerminal = true;
+            for(Coordinate coord : validMoves) {
+                Node next = new Node(Engine.updateBoard(this.state, coord, this.player), -this.player);
+                if(next.isTerminal) {
+                    this.alpha = Engine.calculateScore(next.state);
+                } else if(next.beta >= this.alpha) {
+                    this.alpha = next.beta;
+                }
+                if(bestAction == null || next.beta >= this.bestAction.utility) {
+                    this.bestAction = new Action(coord, next.beta);
+                }
+                if(this.alpha < this.beta) break;
+            }
         }
+
+        private void min() {
+            ArrayList<Coordinate> validMoves = Engine.getValidMoves(this.state, this.player);
+            if(validMoves.size() == 0) this.isTerminal = true;
+            for(Coordinate coord : validMoves) {
+                Node next = new Node(Engine.updateBoard(this.state, coord, this.player), -this.player);
+                if(next.isTerminal) {
+                    this.beta = Engine.calculateScore(next.state);
+                } else if(next.alpha <= this.beta) {
+                    this.beta = next.alpha;
+                }
+                if(bestAction == null || next.alpha <= this.bestAction.utility) {
+                    this.bestAction = new Action(coord, next.alpha);
+                }
+                if(this.alpha > this.beta) break;
+            }
+        }
+
     }
 
     public Coordinate getNextMove(GameState state) {

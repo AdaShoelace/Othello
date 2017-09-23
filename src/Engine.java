@@ -48,7 +48,7 @@ public class Engine {
      * @return list of possible states
      */
     public static ArrayList<GameState> generatePossibleStates(GameState state, int player) {
-        boolean[][] possibleMoves = getValidMoves(state, player);
+        boolean[][] possibleMoves = getValidMovesOld(state, player);
         ArrayList<GameState> possibleStates = new ArrayList<>();
 
         int i = 0;
@@ -85,7 +85,7 @@ public class Engine {
 
     public static GameState getFirstPossibleState(GameState gState, int player) {
         GameState ret = new GameState(gState);
-        boolean[][] moves = getValidMoves(ret, player);
+        boolean[][] moves = getValidMovesOld(ret, player);
         for(int row = 0; row < moves.length; row++) {
             for(int col = 0; col < moves[0].length; col++) {
                 if(moves[row][col]) {
@@ -105,6 +105,7 @@ public class Engine {
      */
     public static boolean isValidMove(Coordinate coord, GameState gState, int player) {
         GameState state = new GameState(gState);
+        if(state.getGrid()[coord.getRow()][coord.getCol()] != Utils.NONE) return false;
         return checkDirection(NO_DIRECTION, WEST, coord, state, player)
                 || checkDirection(NO_DIRECTION, EAST, coord, state, player)
                 || checkDirection(NORTH, NO_DIRECTION, coord, state, player)
@@ -168,13 +169,13 @@ public class Engine {
         return state;
     }
 
-    public static ArrayList<Coordinate> altGetValidMoves(GameState gState, int player) {
+    public static ArrayList<Coordinate> getValidMoves(GameState gState, int player) {
         GameState state = new GameState(gState);
         ArrayList<Coordinate> validMoves = new ArrayList<>();
         for(int row = 0; row < state.getGrid().length; row++) {
             for(int col = 0; col < state.getGrid()[0].length; col++) {
                 Coordinate move = new Coordinate(row, col);
-                if(isValidMove(move, state,player)) {
+                if(state.getGrid()[row][col] == Utils.NONE && isValidMove(move, state,player)) {
                     validMoves.add(move);
                 }
             }
@@ -188,7 +189,7 @@ public class Engine {
      * @param player
      * @return a boolean matrix of valid coordinates
      */
-    public static boolean[][] getValidMoves(GameState gState, int player) {
+    public static boolean[][] getValidMovesOld(GameState gState, int player) {
         GameState state = new GameState(gState);
         boolean[][] validMoves = new boolean[state.getGrid().length][state.getGrid()[0].length];
         for(int row = 0; row < state.getGrid().length; row++) {
@@ -224,7 +225,7 @@ public class Engine {
      * @return
      */
     public static int validMoveCount(GameState state, int player) {
-        boolean[][] board = getValidMoves(state, player);
+        boolean[][] board = getValidMovesOld(state, player);
         int count = 0;
         for(boolean[] row : board) {
             for(boolean elem : row) {

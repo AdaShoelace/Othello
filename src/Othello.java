@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Othello {
 
     //DEBUG
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
     private final boolean ALL_POSSIBLE_STATES = false;
     private final boolean ALL_POSSIBLE_STATES_LIST = true;
     private final boolean FIRST_POSSIBLE_STATE = false;
@@ -47,17 +47,11 @@ public class Othello {
      * @param coord
      */
     public void buttonPressed(Coordinate coord) {
-        //System.out.println(currentPlayer > 0 ? "HUMAN" : "AI");
-        //Utils.print(Engine.getValidMoves(gameState, currentPlayer));
-        //System.out.println("Valid move count: " + Engine.validMoveCount(gameState, currentPlayer));
-        //System.out.println(Engine.calculateScore(gameState));
-
-
         if(DEBUG) {
             System.out.println("Initial state");
             Utils.printState(gameState);
             System.out.println("Possible moves");
-            Utils.print(Engine.getValidMoves(gameState, currentPlayer));
+            //Utils.print(Engine.getValidMoves(gameState, currentPlayer));
 
             if(ALL_POSSIBLE_STATES) {
                 ArrayList<GameState> asd = Engine.generatePossibleStates(gameState, currentPlayer);
@@ -76,50 +70,40 @@ public class Othello {
                     Utils.printState(gameState);
             } else if(ALL_POSSIBLE_STATES_LIST) {
                 GameState tempState = new GameState();
+                /*
                 for(Coordinate c : Engine.altGetValidMoves(tempState, currentPlayer)) {
                     System.out.println("Row: " + c.getRow() + "\nCol: " + c.getCol());
                     Utils.printState(Engine.updateBoard(tempState,c,currentPlayer));
                     System.out.println();
-                }
+                }*/
             }
             return;
         }
 
         if(Engine.isValidMove(coord, gameState, currentPlayer)) {
+            System.out.println("Is valid move");
             gameState = Engine.updateBoard(gameState, coord, currentPlayer);
             SwingUtilities.invokeLater(() -> {
                 gui.draw(gameState);
                 gui.disableButtons();
             });
             currentPlayer = Utils.AI;
+            do{
+                System.out.println("Hejsan från ai");
+                gameState = Engine.updateBoard(gameState, ai.aiMakeMove(gameState), currentPlayer);
+                SwingUtilities.invokeLater(() -> {
+                    gui.draw(gameState);
+                });
+            }
+            while(currentPlayer == Utils.AI && !Engine.hasValidMoves(gameState, Utils.HUMAN));
+
         } else {
             return;
         }
-        //ai.aiMakeMove(gameState);
-        //ai.printChildren(ai.n);
 
-        //Debuggin
-        //System.out.println(currentPlayer > 0 ? "HUMAN" : "AI");
-        //System.out.println(Engine.calculateScore(gameState));
-        //Utils.print(Engine.getValidMoves(gameState, currentPlayer));
-        //System.out.println();
-        //------------------------------------------------------------
-
-        while(Engine.hasValidMoves(gameState, Utils.AI) /*&& !Engine.hasValidMoves(gameState, Utils.HUMAN)*/) {
-            //ai make move
-            SwingUtilities.invokeLater(() -> {
-                gui.draw(gameState);
-                gui.enableButtons();
-            });
-            //This break is here only for debugging purposes
-            break;
-        }
-        //debugging
-        /*System.out.println("Current state");
-        Utils.printState(gameState);
-        System.out.println("Possible moves");
-        Utils.print(Engine.getValidMoves(gameState, currentPlayer));*/
-        //---------------------------------------------------
+        SwingUtilities.invokeLater(() -> {
+            gui.enableButtons();
+        });
         currentPlayer = Utils.HUMAN;
     }
 

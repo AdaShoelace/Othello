@@ -14,7 +14,11 @@ public class GameState {
      * @param state
      */
     public GameState(GameState state) {
-        gameGrid = state.gameGrid;
+        gameGrid = new int[state.gameGrid.length][state.gameGrid.length];
+            for(int i = 0; i < state.gameGrid.length; i++)
+            {
+                gameGrid[i] = state.gameGrid[i].clone();
+            }
     }
 
     /**
