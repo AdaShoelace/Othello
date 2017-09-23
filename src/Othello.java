@@ -27,6 +27,19 @@ public class Othello {
         System.out.println(currentPlayer);
     }
 
+    public void localMultiplayerButtonPressed(Coordinate coord) {
+        if(Engine.isValidMove(coord, gameState, currentPlayer)) {
+            gameState = Engine.updateBoard(gameState, coord, currentPlayer);
+            SwingUtilities.invokeLater(() -> {
+                gui.draw(gameState);
+                //gui.disableButtons();
+            });
+            currentPlayer = -currentPlayer;
+        } else {
+            return;
+        }
+    }
+
     /**
      * This is run when ever the human player press a coordinate in the GUI
      * It sets the current player, calls for a redraw of the GUI and trigger the AI's next move
