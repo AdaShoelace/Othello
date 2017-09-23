@@ -62,6 +62,21 @@ public class Engine {
         return possibleStates;
     }
 
+    public static ArrayList<GameState> generatePossibleStates2(GameState state, int player) {
+        ArrayList<GameState> possibleStates = new ArrayList<>();
+
+        for(int row = 0; row < state.getGrid().length; row++) {
+            for(int col = 0; col < state.getGrid()[0].length; col++) {
+                if(isValidMove(new Coordinate(row, col), new GameState(state), player)) {
+                    GameState gsCpy = new GameState(state);
+                    possibleStates.add(Engine.updateBoard(gsCpy, new Coordinate(row, col), player));
+                }
+            }
+        }
+        return possibleStates;
+    }
+
+
     public static GameState getFirstPossibleState(GameState gState, int player) {
         GameState ret = new GameState(gState);
         boolean[][] moves = getValidMoves(ret, player);

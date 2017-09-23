@@ -9,7 +9,7 @@ public class Othello {
 
     //DEBUG
     private final boolean DEBUG = true;
-    private final boolean ALL_POSSIBLE_STATES = false;
+    private final boolean ALL_POSSIBLE_STATES = true;
     private final boolean FIRST_POSSIBLE_STATE = false;
 
     private boolean isRunning;
@@ -40,12 +40,13 @@ public class Othello {
 
 
         if(DEBUG) {
+            System.out.println("Initial state");
+            Utils.printState(gameState);
+            System.out.println("Possible moves");
+            Utils.print(Engine.getValidMoves(gameState, currentPlayer));
+
             if(ALL_POSSIBLE_STATES) {
-                System.out.println("Initial state");
-                Utils.printState(gameState);
-                System.out.println("Possible moves");
-                Utils.print(Engine.getValidMoves(gameState, currentPlayer));
-                ArrayList<GameState> asd = Engine.generatePossibleStates(gameState, currentPlayer);
+                ArrayList<GameState> asd = Engine.generatePossibleStates2(gameState, currentPlayer);
                 int i = 1;
                 for(GameState gs : asd) {
                     System.out.println("Possible state: " + i);
