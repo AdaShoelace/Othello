@@ -7,6 +7,11 @@ import java.util.ArrayList;
  */
 public class Othello {
 
+    //DEBUG
+    private final boolean DEBUG = true;
+    private final boolean ALL_POSSIBLE_STATES = false;
+    private final boolean FIRST_POSSIBLE_STATE = false;
+
     private boolean isRunning;
     GameState gameState;
     GUI gui;
@@ -34,19 +39,27 @@ public class Othello {
         //System.out.println(Engine.calculateScore(gameState));
 
 
-        if(true) {
-            System.out.println("Initial state");
-            Utils.printState(gameState);
-            System.out.println("Possible moves");
-            Utils.print(Engine.getValidMoves(gameState, currentPlayer));
-            /*ArrayList<GameState> asd = Engine.generatePossibleStates(gameState, currentPlayer);
-            int i = 1;
-            for(GameState gs : asd) {
-                System.out.println("Possible state: " + i);
-                Utils.printState(gs);
-                i++;
-            }*/
-            Utils.printState(Engine.getFirstPossibleState(gameState, currentPlayer));
+        if(DEBUG) {
+            if(ALL_POSSIBLE_STATES) {
+                System.out.println("Initial state");
+                Utils.printState(gameState);
+                System.out.println("Possible moves");
+                Utils.print(Engine.getValidMoves(gameState, currentPlayer));
+                ArrayList<GameState> asd = Engine.generatePossibleStates(gameState, currentPlayer);
+                int i = 1;
+                for(GameState gs : asd) {
+                    System.out.println("Possible state: " + i);
+                    Utils.printState(gs);
+                    i++;
+                }
+            } else if(FIRST_POSSIBLE_STATE) {
+                    System.out.println("First possible state");
+                    gameState = Engine.getFirstPossibleState(gameState, currentPlayer);
+                    Utils.printState(gameState);
+                    System.out.println("Next possible state");
+                    gameState = Engine.getFirstPossibleState(gameState, currentPlayer);
+                    Utils.printState(gameState);
+            }
             return;
         }
 
@@ -60,8 +73,8 @@ public class Othello {
         } else {
             return;
         }
-        ai.aiMakeMove(gameState);
-        ai.printChildren(ai.n);
+        //ai.aiMakeMove(gameState);
+        //ai.printChildren(ai.n);
 
         //Debuggin
         //System.out.println(currentPlayer > 0 ? "HUMAN" : "AI");

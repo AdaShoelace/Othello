@@ -29,8 +29,8 @@ public class Engine {
 
             postMove = flipChips(NO_DIRECTION, WEST, coord, postMove, player);
             postMove = flipChips(NO_DIRECTION, EAST, coord, postMove, player);
-            postMove = flipChips(WEST, NO_DIRECTION, coord, postMove, player);
-            postMove = flipChips(EAST, NO_DIRECTION, coord, postMove, player);
+            postMove = flipChips(NORTH, NO_DIRECTION, coord, postMove, player);
+            postMove = flipChips(SOUTH, NO_DIRECTION, coord, postMove, player);
             postMove = flipChips(NORTH, WEST, coord, postMove, player);
             postMove = flipChips(NORTH, EAST, coord, postMove, player);
             postMove = flipChips(SOUTH, WEST, coord, postMove, player);
@@ -54,34 +54,36 @@ public class Engine {
         for(int row = 0; row < possibleMoves.length; row++) {
             for(int col = 0; col < possibleMoves[0].length; col++) {
                 if(possibleMoves[row][col]) {
-                    possibleStates.add(Engine.updateBoard(new GameState(state), new Coordinate(row, col), player));
+                    GameState gsCpy = new GameState(state);
+                    possibleStates.add(Engine.updateBoard(gsCpy, new Coordinate(row, col), player));
                 }
             }
         }
         return possibleStates;
     }
 
-    public static GameState getFirstPossibleState(GameState state, int player) {
-        boolean[][] moves = getValidMoves(state, player);
-        GameState ret = state;
+    public static GameState getFirstPossibleState(GameState gState, int player) {
+        GameState ret = new GameState(gState);
+        boolean[][] moves = getValidMoves(ret, player);
         for(int row = 0; row < moves.length; row++) {
             for(int col = 0; col < moves[0].length; col++) {
                 if(moves[row][col]) {
-                    return Engine.updateBoard(new GameState(state), new Coordinate(row, col), player);
+                    return Engine.updateBoard(ret, new Coordinate(row, col), player);
                 }
             }
         }
-        return ret;
+        return gState;
     }
 
     /**
      * Checks if the move the players wants to make is valid or not
      * @param coord
-     * @param state
+     * @param gState
      * @param player
      * @return
      */
-    public static boolean isValidMove(Coordinate coord, GameState state, int player) {
+    public static boolean isValidMove(Coordinate coord, GameState gState, int player) {
+        GameState state = new GameState(gState);
         return checkDirection(NO_DIRECTION, WEST, coord, state, player)
                 || checkDirection(NO_DIRECTION, EAST, coord, state, player)
                 || checkDirection(NORTH, NO_DIRECTION, coord, state, player)
@@ -121,7 +123,8 @@ public class Engine {
         return false;
     }
 
-    private static GameState flipChips(int deltaRow, int deltaCol, Coordinate coord, GameState state, int player) {
+    private static GameState flipChips(int deltaRow, int deltaCol, Coordinate coord, GameState gState, int player) {
+        GameState state = new GameState(gState);
         int row = coord.getRow() + deltaRow;
         int col = coord.getCol() + deltaCol;
         int[][] grid = state.getGrid();
@@ -146,11 +149,12 @@ public class Engine {
 
     /**
      * Calculate the valid moves for the given player in the given state
-     * @param state
+     * @param gState
      * @param player
      * @return a boolean matrix of valid coordinates
      */
-    public static boolean[][] getValidMoves(GameState state, int player) {
+    public static boolean[][] getValidMoves(GameState gState, int player) {
+        GameState state = new GameState(gState);
         boolean[][] validMoves = new boolean[state.getGrid().length][state.getGrid()[0].length];
         for(int row = 0; row < state.getGrid().length; row++) {
             for(int col = 0; col < state.getGrid()[0].length; col++) {
