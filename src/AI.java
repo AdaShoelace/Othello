@@ -6,18 +6,28 @@ import java.util.Timer;
  */
 public class AI {
 
-    private static int TIME_LIMIT = 5000;
-    //private GameState state;
     Node root;
     public AI() {
 
     }
 
+    /**
+     * Builds a minimax tree and returns the best move for AI
+     * @param state
+     * @param controller
+     * @return
+     */
     Coordinate aiMakeMove(GameState state, Othello controller) {
-        root = new Node(state, 0, controller);
+        //Time for when the tree construction is initiated, later used for evaluating cutoff
+        long timeStarted = System.currentTimeMillis();
+        root = new Node(state, 0, controller, timeStarted);
         return root.bestAction.c;
     }
 
+    /**
+     * Class that acts as the model for the treenodes.
+     * Recursive constructors in which the alpha-beta-search is implemented
+     */
     private class Node {
         int alpha = Integer.MIN_VALUE;
         int beta = Integer.MAX_VALUE;
@@ -26,14 +36,14 @@ public class AI {
         boolean isTerminal = false;
         int player = Utils.AI;
         Othello controller;
-        Node(GameState state, long count, Othello controller) {
+        Node(GameState state, long count, Othello controller, long startTime) {
             this.state = state;
             this.controller = controller;
             controller.setNodeString(count);
-            max(count, controller);
+            max(count, controller, startTime + Utils.TIME);
         }
 
-        Node(GameState state, int player, int alpha, int beta, long count, Othello controller) {
+        private Node(GameState state, int player, int alpha, int beta, long count, Othello controller, long cutoff) {
             this.state = state;
             this.player = player;
             this.alpha = alpha;
@@ -41,18 +51,18 @@ public class AI {
             this.controller = controller;
             controller.setNodeString(count);
             if(this.player == Utils.HUMAN) {
-                min(count, controller);
+                min(count, controller, cutoff);
             } else {
 
-                max(count, controller);
+                max(count, controller, cutoff);
             }
         }
 
-        private void max(long count, Othello controller) {
+        private void max(long count, Othello controller, long cutoff) {
             ArrayList<Coordinate> validMoves = Engine.getValidMoves(this.state, this.player);
-            if(validMoves.size() == 0) this.isTerminal = true;
+            if(validMoves.size() == 0 || System.currentTimeMillis() > cutoff) this.isTerminal = true;
             for(Coordinate coord : validMoves) {
-                Node next = new Node(Engine.updateBoard(this.state, coord, this.player), -this.player, this.alpha, this.beta, count + 1, controller);
+                Node next = new Node(Engine.updateBoard(this.state, coord, this.player), -this.player, this.alpha, this.beta, count + 1, controller, cutoff);
                 if(next.isTerminal) {
                     this.alpha = Engine.calculateScore(next.state);
                 } else if(next.beta >= this.alpha) {
@@ -61,15 +71,15 @@ public class AI {
                 if(bestAction == null || next.beta >= this.bestAction.utility) {
                     this.bestAction = new Action(coord, next.beta);
                 }
-                if(this.alpha < this.beta) break;
+                if(this.alpha <= this.beta) break;
             }
         }
 
-        private void min(long count, Othello controller) {
+        private void min(long count, Othello controller, long cutoff) {
             ArrayList<Coordinate> validMoves = Engine.getValidMoves(this.state, this.player);
-            if(validMoves.size() == 0) this.isTerminal = true;
+            if(validMoves.size() == 0 || System.currentTimeMillis() > cutoff) this.isTerminal = true;
             for(Coordinate coord : validMoves) {
-                Node next = new Node(Engine.updateBoard(this.state, coord, this.player), -this.player, this.alpha, this.beta, count + 1, controller);
+                Node next = new Node(Engine.updateBoard(this.state, coord, this.player), -this.player, this.alpha, this.beta, count + 1, controller, cutoff);
                 if(next.isTerminal) {
                     this.beta = Engine.calculateScore(next.state);
                 } else if(next.alpha <= this.beta) {
@@ -78,16 +88,9 @@ public class AI {
                 if(bestAction == null || next.alpha <= this.bestAction.utility) {
                     this.bestAction = new Action(coord, next.alpha);
                 }
-                if(this.alpha > this.beta) break;
+                if(this.alpha <= this.beta) break;
             }
         }
 
     }
-
-    public Coordinate getNextMove(GameState state) {
-        return null;
-    }
-
-
-
 }

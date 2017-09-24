@@ -42,61 +42,6 @@ public class Engine {
     }
 
     /**
-     * Generates a list of all the possible states the game can take based on the state passed to the method
-     * @param state
-     * @param player
-     * @return list of possible states
-     */
-    public static ArrayList<GameState> generatePossibleStates(GameState state, int player) {
-        boolean[][] possibleMoves = getValidMovesOld(state, player);
-        ArrayList<GameState> possibleStates = new ArrayList<>();
-
-        int i = 0;
-
-        for(int row = 0; row < possibleMoves.length; row++) {
-            for(int col = 0; col < possibleMoves[0].length; col++) {
-                if(possibleMoves[row][col]) {
-                    GameState gsCpy = new GameState(state);
-                    System.out.println("Generating states iteration: " + i);
-                    Utils.printState(Engine.updateBoard(gsCpy, new Coordinate(row, col), player));
-                    System.out.println();
-                    possibleStates.add(Engine.updateBoard(gsCpy, new Coordinate(row, col), player));
-                    i++;
-                }
-            }
-        }
-        return possibleStates;
-    }
-
-    public static ArrayList<GameState> generatePossibleStates2(GameState state, int player) {
-        ArrayList<GameState> possibleStates = new ArrayList<>();
-
-        for(int row = 0; row < state.getGrid().length; row++) {
-            for(int col = 0; col < state.getGrid()[0].length; col++) {
-                if(isValidMove(new Coordinate(row, col), new GameState(state), player)) {
-                    GameState gsCpy = new GameState(state);
-                    possibleStates.add(Engine.updateBoard(gsCpy, new Coordinate(row, col), player));
-                }
-            }
-        }
-        return possibleStates;
-    }
-
-
-    public static GameState getFirstPossibleState(GameState gState, int player) {
-        GameState ret = new GameState(gState);
-        boolean[][] moves = getValidMovesOld(ret, player);
-        for(int row = 0; row < moves.length; row++) {
-            for(int col = 0; col < moves[0].length; col++) {
-                if(moves[row][col]) {
-                    return Engine.updateBoard(ret, new Coordinate(row, col), player);
-                }
-            }
-        }
-        return gState;
-    }
-
-    /**
      * Checks if the move the players wants to make is valid or not
      * @param coord
      * @param gState
@@ -145,6 +90,15 @@ public class Engine {
         return false;
     }
 
+    /**
+     * Helper function that checks what chips to flip in the given state
+     * @param deltaRow
+     * @param deltaCol
+     * @param coord
+     * @param gState
+     * @param player
+     * @return
+     */
     private static GameState flipChips(int deltaRow, int deltaCol, Coordinate coord, GameState gState, int player) {
         GameState state = new GameState(gState);
         int row = coord.getRow() + deltaRow;
@@ -169,6 +123,12 @@ public class Engine {
         return state;
     }
 
+    /**
+     * Returns a list of coordinates of valid moves for the given player
+     * @param gState
+     * @param player
+     * @return
+     */
     public static ArrayList<Coordinate> getValidMoves(GameState gState, int player) {
         GameState state = new GameState(gState);
         ArrayList<Coordinate> validMoves = new ArrayList<>();
