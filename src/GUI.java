@@ -13,14 +13,23 @@ public class GUI extends JFrame{
 
     private JLabel aiStatus;
     private JLabel nodes;
-    private JLabel aiPoints;
+    private JLabel currentPlayer;
+    String playerString = "WHITE";
     private Othello othello;
     private String nodeString = "";
+    private boolean isMultiplayer = false;
 
     private OthelloButton[][] buttonGrid;
 
     public GUI(String name, GameState state, Othello othello){
         super(name);
+        int choice = JOptionPane.showConfirmDialog(null,
+                "Do you wish to play against a friend on the same computer",
+                "Game option",
+                JOptionPane.YES_NO_OPTION);
+        if(choice == 0) {
+            isMultiplayer = true;
+        }
         setPreferredSize(new Dimension(1000,1000));
         setResizable(false);
         JPanel outerPanel = new JPanel(new BorderLayout());
@@ -33,16 +42,20 @@ public class GUI extends JFrame{
         panel.setBackground(new Color(0x0066cc));
         panel.setSize(BOARDSIZE);
         populateButtonPanel(panel, state);
-        JPanel statusPanel = new JPanel(new GridLayout(1,3));
+        JPanel statusPanel = new JPanel(new GridLayout(1,2));
         aiStatus = new JLabel("AI status: ");
-        aiPoints = new JLabel("AI points: ");
         nodes = new JLabel("Nodes: " + nodeString);
         aiStatus.setForeground(Color.WHITE);
-        aiPoints.setForeground(Color.WHITE);
         nodes.setForeground(Color.WHITE);
-        statusPanel.add(nodes, 0, 0);
-        statusPanel.add(aiPoints, 0, 1);
-        statusPanel.add(aiStatus,0, 2);
+        if(!isMultiplayer) {
+            statusPanel.add(nodes, 0, 0);
+            statusPanel.add(aiStatus,0, 1);
+        } else {
+            currentPlayer = new JLabel();
+            currentPlayer.setText("Current player: " + playerString);
+            currentPlayer.setForeground(Color.WHITE);
+            statusPanel.add(currentPlayer, 0, 0);
+        }
         statusPanel.setBackground(Color.BLACK);
         statusPanel.setPreferredSize(new Dimension(100,100));
         outerPanel.add(panel, BorderLayout.CENTER);
@@ -128,13 +141,21 @@ public class GUI extends JFrame{
         }
     }
 
+    void setPlayerString(String s) {
+        playerString = s;
+        currentPlayer.setText("Current player: " + playerString);
+    }
+
     private class OthelloListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             OthelloButton button = (OthelloButton)actionEvent.getSource();
-            othello.buttonPressed(button.getCoordinate());
-            //othello.localMultiplayerButtonPressed(button.getCoordinate());
+            if(isMultiplayer) {
+                othello.localMultiplayerButtonPressed(button.getCoordinate());
+            } else {
+                othello.buttonPressed(button.getCoordinate());
+            }
         }
     }
 }

@@ -24,6 +24,11 @@ public class Othello {
             gameState = Engine.updateBoard(gameState, coord, currentPlayer);
             SwingUtilities.invokeLater(() -> {
                 gui.draw(gameState);
+                if(currentPlayer == Utils.AI) {
+                    gui.setPlayerString("BLACK");
+                } else {
+                    gui.setPlayerString("WHITE");
+                }
             });
             currentPlayer = -currentPlayer;
         } else {
