@@ -44,7 +44,6 @@ public class Othello {
     public void buttonPressed(Coordinate coord) {
 
         if(Engine.isValidMove(coord, gameState, currentPlayer)) {
-            System.out.println("Is valid move");
             gameState = Engine.updateBoard(gameState, coord, currentPlayer);
             SwingUtilities.invokeLater(() -> {
                 gui.draw(gameState);
@@ -52,7 +51,6 @@ public class Othello {
             });
             currentPlayer = Utils.AI;
             do{
-                System.out.println("Hejsan från ai");
                 gameState = Engine.updateBoard(gameState, ai.aiMakeMove(gameState, this), currentPlayer);
                 SwingUtilities.invokeLater(() -> {
                     gui.draw(gameState);
