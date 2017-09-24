@@ -90,7 +90,7 @@ public class Othello {
             currentPlayer = Utils.AI;
             do{
                 System.out.println("Hejsan från ai");
-                gameState = Engine.updateBoard(gameState, ai.aiMakeMove(gameState), currentPlayer);
+                gameState = Engine.updateBoard(gameState, ai.aiMakeMove(gameState, this), currentPlayer);
                 SwingUtilities.invokeLater(() -> {
                     gui.draw(gameState);
                 });
@@ -105,6 +105,10 @@ public class Othello {
             gui.enableButtons();
         });
         currentPlayer = Utils.HUMAN;
+    }
+
+    public void setNodeString(long count) {
+        gui.setNodes(count);
     }
 
     public static void main(String[] args) {

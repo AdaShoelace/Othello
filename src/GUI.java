@@ -12,9 +12,10 @@ public class GUI extends JFrame{
             (int)BOARDSIZE.getHeight()/Utils.COLS);
 
     private JLabel aiStatus;
-    private JLabel humanPoints;
+    private JLabel nodes;
     private JLabel aiPoints;
     private Othello othello;
+    private String nodeString = "";
 
     private OthelloButton[][] buttonGrid;
 
@@ -35,11 +36,11 @@ public class GUI extends JFrame{
         JPanel statusPanel = new JPanel(new GridLayout(1,3));
         aiStatus = new JLabel("AI status: ");
         aiPoints = new JLabel("AI points: ");
-        humanPoints = new JLabel("Human points: ");
+        nodes = new JLabel("Nodes: " + nodeString);
         aiStatus.setForeground(Color.WHITE);
         aiPoints.setForeground(Color.WHITE);
-        humanPoints.setForeground(Color.WHITE);
-        statusPanel.add(humanPoints, 0, 0);
+        nodes.setForeground(Color.WHITE);
+        statusPanel.add(nodes, 0, 0);
         statusPanel.add(aiPoints, 0, 1);
         statusPanel.add(aiStatus,0, 2);
         statusPanel.setBackground(Color.BLACK);
@@ -51,7 +52,12 @@ public class GUI extends JFrame{
         this.pack();
         this.setVisible(true);
     }
-
+    public void setNodes(long count) {
+        nodeString = String.valueOf(count);
+        SwingUtilities.invokeLater(() -> {
+            nodes.setText("Nodes: " + nodeString);
+        });
+    }
     private void populateButtonPanel(JPanel panel, GameState state) {
         for(int i = 0; i < Utils.ROWS; ++i){
             for(int j = 0; j < Utils.COLS; ++j){

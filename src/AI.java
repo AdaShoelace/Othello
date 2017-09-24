@@ -13,8 +13,8 @@ public class AI {
 
     }
 
-    Coordinate aiMakeMove(GameState state) {
-        root = new Node(state);
+    Coordinate aiMakeMove(GameState state, Othello controller) {
+        root = new Node(state, 0, controller);
         return root.bestAction.c;
     }
 
@@ -25,26 +25,34 @@ public class AI {
         Action bestAction;
         boolean isTerminal = false;
         int player = Utils.AI;
-        Node(GameState state) {
+        Othello controller;
+        Node(GameState state, long count, Othello controller) {
             this.state = state;
-            max();
+            this.controller = controller;
+            controller.setNodeString(count);
+            max(count, controller);
         }
 
-        Node(GameState state, int player) {
+        Node(GameState state, int player, int alpha, int beta, long count, Othello controller) {
             this.state = state;
             this.player = player;
+            this.alpha = alpha;
+            this.beta = beta;
+            this.controller = controller;
+            controller.setNodeString(count);
             if(this.player == Utils.HUMAN) {
-                min();
+                min(count, controller);
             } else {
-                max();
+
+                max(count, controller);
             }
         }
 
-        private void max() {
+        private void max(long count, Othello controller) {
             ArrayList<Coordinate> validMoves = Engine.getValidMoves(this.state, this.player);
             if(validMoves.size() == 0) this.isTerminal = true;
             for(Coordinate coord : validMoves) {
-                Node next = new Node(Engine.updateBoard(this.state, coord, this.player), -this.player);
+                Node next = new Node(Engine.updateBoard(this.state, coord, this.player), -this.player, this.alpha, this.beta, count + 1, controller);
                 if(next.isTerminal) {
                     this.alpha = Engine.calculateScore(next.state);
                 } else if(next.beta >= this.alpha) {
@@ -57,11 +65,11 @@ public class AI {
             }
         }
 
-        private void min() {
+        private void min(long count, Othello controller) {
             ArrayList<Coordinate> validMoves = Engine.getValidMoves(this.state, this.player);
             if(validMoves.size() == 0) this.isTerminal = true;
             for(Coordinate coord : validMoves) {
-                Node next = new Node(Engine.updateBoard(this.state, coord, this.player), -this.player);
+                Node next = new Node(Engine.updateBoard(this.state, coord, this.player), -this.player, this.alpha, this.beta, count + 1, controller);
                 if(next.isTerminal) {
                     this.beta = Engine.calculateScore(next.state);
                 } else if(next.alpha <= this.beta) {
